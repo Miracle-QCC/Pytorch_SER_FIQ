@@ -51,13 +51,13 @@ class SER_FIQ(nn.Module):
                 m.weight.data.fill_(1)
                 m.bias.data.zero_()
 
-    def euclidean_dist_loss(self, x):
+    def euclidean_dist_loss(self, x, weight):
         b, m, c = x.shape
         out = torch.zeros(b, 1)
         count = 0
         for i in range(m):
             for j in range(i + 1, m):
-                out += F.smooth_l1_loss(x[:,i,:],x[:,j,:])
+                out += F.smooth_l1_loss(x[:,i,:] * weight,x[:,j,:] * weight)
                 count += 1
 
         out /= count
